@@ -1,15 +1,22 @@
 import * as THREE from "three";
 import {Lensflare, LensflareElement} from "three/examples/jsm/objects/Lensflare";
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 export class ThreeDEngine {
     private _elementToWatch: HTMLElement;
     private _scene: THREE.Scene;
     private _camera: THREE.PerspectiveCamera;
     private _renderer: THREE.WebGLRenderer;
+    private _flareLight: THREE.PointLight;
+    private _timeoutId: number | null = null;
+
+    private static readonly CAMERA_ROTATION_SPEED = 0.0002;
+    private static readonly NORMAL_BRIGHTNESS = 1.5;
+    private static readonly FAST_BRIGHTNESS = 2.5;
+    private static readonly BRITHNESS_DELAY_MS = 100;
 
     constructor(element: HTMLCanvasElement, elementToWatch: HTMLElement) {
         console.log("Initializing Game Engine...")
+        this._timeoutId = null;
 
         this._elementToWatch = elementToWatch;
 
@@ -54,12 +61,23 @@ export class ThreeDEngine {
         this._scene.add(dirLight);
 
         // lensflares
-        this.addLensFlare(
-            {h: 0.08, s: 0.8, l: 0.5},
-            {x: 0, y: 0, z: -1000}
-        );
-        // addLight( 0.08, 0.8, 0.5, 0, 0, - 1000 );
-        // addLight( 0.995, 0.5, 0.9, 5000, 5000, - 1000 );
+        const textureLoader = new THREE.TextureLoader();
+
+        const textureFlare0 = textureLoader.load('textures/lensflare/lensflare0.png');
+        const textureFlare3 = textureLoader.load('textures/lensflare/lensflare3.png');
+
+        this._flareLight = new THREE.PointLight(0xffffff, 1.5, 2000);
+        this._flareLight.color.setHSL(0.08, 0.8, 0.5);
+        this._flareLight.position.set(0, 0, -1000);
+        this._scene.add(this._flareLight);
+
+        const lensflare = new Lensflare();
+        lensflare.addElement(new LensflareElement(textureFlare0, 700, 0, this._flareLight.color));
+        lensflare.addElement(new LensflareElement(textureFlare3, 60, 0.6));
+        lensflare.addElement(new LensflareElement(textureFlare3, 70, 0.7));
+        lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
+        lensflare.addElement(new LensflareElement(textureFlare3, 70, 1));
+        this._flareLight.add(lensflare);
 
         // On scroll
         this._elementToWatch.addEventListener("scroll", _ => this.onScroll());
@@ -81,40 +99,20 @@ export class ThreeDEngine {
     private animate() {
         requestAnimationFrame(() => this.animate());
         this._renderer.render(this._scene, this._camera);
-        this._camera.rotation.z = this._camera.rotation.z + 0.0002 % 360;
+        this._camera.rotation.z += ThreeDEngine.CAMERA_ROTATION_SPEED % 360;
     }
 
     private onScroll = () => {
-        const top = this._elementToWatch.scrollTop;
-        console.log(top)
-
-        // this._camera.rotation.x = top * 0.0002 % 360;
+        if (this._timeoutId != null) {
+            clearTimeout(this._timeoutId);
+        }
+        this._flareLight.intensity = ThreeDEngine.FAST_BRIGHTNESS;
+        this._timeoutId = setTimeout(() => this._flareLight.intensity = ThreeDEngine.NORMAL_BRIGHTNESS, ThreeDEngine.BRITHNESS_DELAY_MS) as unknown as number;
     }
 
     private onResize = () => {
         this._renderer.setSize(window.innerWidth, window.innerHeight);
         this._camera.aspect = window.innerWidth / window.innerHeight;
         this._camera.updateProjectionMatrix();
-    }
-
-    private addLensFlare(hsl: { h: number, s: number, l: number }, pos: { x: number, y: number, z: number }) {
-        const textureLoader = new THREE.TextureLoader();
-
-        const textureFlare0 = textureLoader.load('textures/lensflare/lensflare0.png');
-        const textureFlare3 = textureLoader.load('textures/lensflare/lensflare3.png');
-
-        const baseLight = new THREE.PointLight(0xffffff, 1.5, 2000);
-        baseLight.color.setHSL(hsl.h, hsl.s, hsl.l);
-        baseLight.position.set(pos.x, pos.y, pos.z);
-        this._scene.add(baseLight);
-
-        const lensflare = new Lensflare();
-        lensflare.addElement(new LensflareElement(textureFlare0, 700, 0, baseLight.color));
-        lensflare.addElement(new LensflareElement(textureFlare3, 60, 0.6));
-        lensflare.addElement(new LensflareElement(textureFlare3, 70, 0.7));
-        lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
-        lensflare.addElement(new LensflareElement(textureFlare3, 70, 1));
-        baseLight.add(lensflare);
-
     }
 }
