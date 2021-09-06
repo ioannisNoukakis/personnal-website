@@ -52,7 +52,7 @@ const useStyles = makeStyles({
     block1: {
         margin: `${theme.spacing(1)}px 0px ${theme.spacing(1)}px 0px`,
         padding: theme.spacing(2),
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.up('md')]: {
             width: "100vw",
         },
         [theme.breakpoints.up('md')]: {
@@ -99,7 +99,7 @@ export const App: React.FC = () => {
 
     useEffect(() => {
         if (c && d) {
-            setEngine(new ThreeDEngine(c, d));
+            setEngine(new ThreeDEngine(c, d, false));
         }
     }, [c, d])
 

@@ -8,7 +8,8 @@ interface Props {
 
 const useStyles = makeStyles({
     avatar: {
-        [theme.breakpoints.down('md')]: {
+        // FIXME broken
+        [theme.breakpoints.down('sm')]: {
             width: "100%"
         },
     },

@@ -1,24 +1,38 @@
 import * as THREE from "three";
 import {Lensflare, LensflareElement} from "three/examples/jsm/objects/Lensflare";
+import {ThreeJsCube} from "./infrastructure/adapters/ThreeJsCube";
+import {CubeManager} from "./domain/usecase/CubeManager";
+import {Vector3} from "three";
+import {TestCube} from "./infrastructure/adapters/TestCube";
+import {Point} from "./domain/usecase/utils";
+import {ThreeJSScene} from "./infrastructure/adapters/ThreeJSScene";
+import {JSRandom} from "./infrastructure/adapters/JSRandom";
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import Stats from "three/examples/jsm/libs/stats.module";
 
 export class ThreeDEngine {
-    private _elementToWatch: HTMLElement;
     private _scene: THREE.Scene;
     private _camera: THREE.PerspectiveCamera;
     private _renderer: THREE.WebGLRenderer;
     private _flareLight: THREE.PointLight;
     private _timeoutId: number | null = null;
+    private _clock: THREE.Clock = new THREE.Clock();
+    private _controls: OrbitControls | null = null;
+    private stats: any;
+
+    private _cubeManager: CubeManager;
 
     private static readonly CAMERA_ROTATION_SPEED = 0.0002;
     private static readonly NORMAL_BRIGHTNESS = 1.5;
     private static readonly FAST_BRIGHTNESS = 2.5;
     private static readonly BRITHNESS_DELAY_MS = 100;
 
-    constructor(element: HTMLCanvasElement, elementToWatch: HTMLElement) {
-        console.log("Initializing Game Engine...")
-        this._timeoutId = null;
+    private static readonly GEOMETRY = new THREE.BoxGeometry(50, 50, 50);
+    private static readonly MATERIAL = new THREE.MeshPhongMaterial({color: 0xffffff, specular: 0xffffff, shininess: 50});
 
-        this._elementToWatch = elementToWatch;
+    constructor(canvas: HTMLCanvasElement, elementToWatch: HTMLElement, withHelpers: boolean) {
+        console.log("Initializing Engine...")
+        this._timeoutId = null;
 
         // Camera
         this._camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 15000);
@@ -28,31 +42,6 @@ export class ThreeDEngine {
         this._scene = new THREE.Scene();
         this._scene.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
         this._scene.fog = new THREE.Fog(this._scene.background, 3500, 15000);
-
-        // world
-        const boxSize = 250;
-
-        const geometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
-        const material = new THREE.MeshPhongMaterial({color: 0xffffff, specular: 0xffffff, shininess: 50});
-
-        for (let i = 0; i < 3000; i++) {
-
-            const mesh = new THREE.Mesh(geometry, material);
-
-            mesh.position.x = 8000 * (2.0 * Math.random() - 1.0);
-            mesh.position.y = 8000 * (2.0 * Math.random() - 1.0);
-            mesh.position.z = 8000 * (2.0 * Math.random() - 1.0);
-
-            mesh.rotation.x = Math.random() * Math.PI;
-            mesh.rotation.y = Math.random() * Math.PI;
-            mesh.rotation.z = Math.random() * Math.PI;
-
-            // optimization as they wont move
-            mesh.matrixAutoUpdate = false;
-            mesh.updateMatrix();
-
-            this._scene.add(mesh);
-        }
 
         // Lights
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.05);
@@ -68,7 +57,7 @@ export class ThreeDEngine {
 
         this._flareLight = new THREE.PointLight(0xffffff, 1.5, 2000);
         this._flareLight.color.setHSL(0.08, 0.8, 0.5);
-        this._flareLight.position.set(0, 0, -1000);
+        this._flareLight.position.set(0, 0, -500);
         this._scene.add(this._flareLight);
 
         const lensflare = new Lensflare();
@@ -80,26 +69,66 @@ export class ThreeDEngine {
         this._flareLight.add(lensflare);
 
         // On scroll
-        this._elementToWatch.addEventListener("scroll", _ => this.onScroll());
+        elementToWatch.addEventListener("scroll", _ => this.onScroll());
         this.onScroll();
 
         // Render
-        this._renderer = new THREE.WebGLRenderer({canvas: element});
+        this._renderer = new THREE.WebGLRenderer({canvas: canvas});
         this._renderer.setPixelRatio(window.devicePixelRatio);
         this._renderer.setSize(window.innerWidth, window.innerHeight);
         this._renderer.outputEncoding = THREE.sRGBEncoding;
 
-        // controls
+        // cube manager
+        this._cubeManager = new CubeManager(
+            {
+                spawnPoint: new Vector3(0, 0, -1000),
+                outOfBoundsX: (x) => x > 500,
+                outOfBoundsY: (y) => y > 500,
+                outOfBoundsZ: (z) => z > 500,
+                intervalMS: 200,
+                howManyPerBatch: 10,
+                radiusMin: 300,
+                radiusMax: 500,
+                speed: 0.5,
+                cubeFactory: () => new ThreeJsCube(new THREE.Mesh(ThreeDEngine.GEOMETRY, ThreeDEngine.MATERIAL)),
+                computeDirection: (randomPointInCircle: Point, spawnPoint: Vector3) => new Vector3(
+                    randomPointInCircle.x,
+                    randomPointInCircle.y,
+                    -spawnPoint.z
+                ),
+                cubeNumberLimit: 6000,
+            },
+            new ThreeJSScene(this._scene),
+            new JSRandom(),
+         );
 
+        if (withHelpers) {
+            this._controls = new OrbitControls(this._camera, canvas);
+            this._controls.update();
+
+            const gridHelper = new THREE.GridHelper(300, 10);
+            this._scene.add(gridHelper);
+
+            const axesHelper = new THREE.AxesHelper(1000);
+            this._scene.add(axesHelper);
+        }
+
+        // @ts-ignore
+        this.stats = new Stats();
+        canvas.appendChild(this.stats.dom);
+
+        // controls
         window.addEventListener("resize", this.onResize);
         this.animate();
-        console.log("All done!")
+        console.log("All done!");
     }
 
     private animate() {
         requestAnimationFrame(() => this.animate());
+        this._controls && this._controls.update();
+        this._cubeManager.update(this._clock.getDelta() * 1000);
+        // this._camera.rotation.z += ThreeDEngine.CAMERA_ROTATION_SPEED % 360;
         this._renderer.render(this._scene, this._camera);
-        this._camera.rotation.z += ThreeDEngine.CAMERA_ROTATION_SPEED % 360;
     }
 
     private onScroll = () => {
