@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {ThreeDEngine} from "./engine/3dEngine";
+import {ThreeDEngine} from "./engine/ThreeDEngine";
 import {Button, Grid, makeStyles, Paper, useMediaQuery} from "@material-ui/core";
 import theme from "./theme";
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import {ProjectCard} from "./components/ProjectCard";
 import Typography from "@material-ui/core/Typography";
+import {GridGroupByTwo} from "./components/GridGroupByTwo";
+import {Avatar} from "./components/Avatar";
 
 const useStyles = makeStyles({
     canvas: {
@@ -21,31 +23,53 @@ const useStyles = makeStyles({
     },
     title: {
         color: "#ffffff",
-        fontSize: "2rem",
+        fontSize: "1rem",
         textAlign: "center",
         minHeight: "100vh",
         padding: "8rem 4rem 6rem 4rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
+        [theme.breakpoints.up('md')]: {
+            fontSize: "2rem",
+        }
+    },
+    avatar: {
+        [theme.breakpoints.down('md')]: {
+            width: "100%"
+        },
     },
     hNoMargin: {
         margin: 0,
     },
+    sectionTitle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "2rem 0rem 2rem 0rem",
+    },
     block1: {
-        margin: "4rem 4rem 0rem 4rem",
-        padding: theme.spacing(2)
+        margin: `${theme.spacing(1)}px 0px ${theme.spacing(1)}px 0px`,
+        padding: theme.spacing(2),
+        [theme.breakpoints.down('md')]: {
+            width: "100vw",
+        },
+        [theme.breakpoints.up('md')]: {
+            margin: "4rem 4rem 0rem 4rem",
+        }
     },
     block2: {
-        margin: "4rem 4rem 0rem 4rem",
+        margin: `${theme.spacing(1)}px 0px ${theme.spacing(1)}px 0px`,
+        [theme.breakpoints.up('md')]: {
+            margin: "4rem 4rem 0rem 4rem",
+        }
     },
 });
 
 export const App: React.FC = () => {
     const classes = useStyles();
-    const matches = useMediaQuery('(min-width:600px)');
-    console.log("QUERY", matches)
+    const wideScreen = useMediaQuery(theme.breakpoints.up('md'));
 
     const [_, setEngine] = useState<ThreeDEngine | null>(null);
     const [c, setC] = useState<HTMLCanvasElement | null>(null);
@@ -105,7 +129,7 @@ export const App: React.FC = () => {
                 </Grid>
                 <Grid item ref={onOne}>
                     <Paper className={classes.block1}>
-                        <Grid container direction="row" wrap="nowrap" spacing={1}>
+                        <Grid container direction={wideScreen ? "row" : "column"} wrap="nowrap" spacing={1}>
                             <Grid item>
                                 <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed
                                     hendrerit justo.
@@ -150,58 +174,51 @@ export const App: React.FC = () => {
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <img src="/avatar.webp" alt="That's me!"/>
+                                <Avatar src="/avatar.webp"/>
                             </Grid>
                         </Grid>
                     </Paper>
                 </Grid>
                 <Grid item>
-                    <div className={classes.block2}>
-                        <Grid container spacing={1}>
-                            <Grid item>
-                                <Grid container spacing={1} alignItems="stretch" justifyContent="center" wrap="nowrap">
-                                    <Grid item xs={6}>
-                                        <ProjectCard
-                                            imageSrc="/images/newspilot.jpg"
-                                            title="News Pilot"
-                                            contents={"Sharing trusted public service online news via public service media (PSM) " +
-                                            "platforms among EBU Members would create unique value for the Members and audiences " +
-                                            "across Europe. Last spring, the EBU and 14 of its Member broadcasters started to" +
-                                            " pilot a collaborative way of sharing digital news content amongst themselves."}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <ProjectCard
-                                            imageSrc="/images/eurovox.png"
-                                            title="Eurovox Project - Tool"
-                                            contents={"A user-facing tool for navigating, transcribing and translating multilingual " +
-                                            "content. With applications for both file-based (on-demand) and streaming use cases," +
-                                            " a one-time integration of the Tool provides access to a growing array of language tool " +
-                                            "vendors."}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item>
-                                <Grid container spacing={1} alignItems="stretch" justifyContent="center" wrap="nowrap">
-                                    <Grid item xs={6}>
-                                        <ProjectCard
-                                            imageSrc="/images/newspilot.jpg"
-                                            title="News Pilot2"
-                                            contents={"Sharing trusted public service online news via public service media (PSM) platforms among EBU Members would create unique value for the Members and audiences across Europe. Last spring, the EBU and 14 of its Member broadcasters started to pilot a collaborative way of sharing digital news content amongst themselves."}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <ProjectCard
-                                            imageSrc="/images/newspilot.jpg"
-                                            title="News Pilot3"
-                                            contents={"Sharing trusted public service online news via public service media (PSM) platforms among EBU Members would create unique value for the Members and audiences across Europe. Last spring, the EBU and 14 of its Member broadcasters started to pilot a collaborative way of sharing digital news content amongst themselves."}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </div>
+                    <Paper className={classes.block2}>
+                        <GridGroupByTwo
+                            elements={[
+                                <ProjectCard
+                                    imageSrc="/images/newspilot.webp"
+                                    title="News Pilot"
+                                    contents={"Sharing trusted public service online news via public service media (PSM) " +
+                                    "platforms among EBU Members would create unique value for the Members and audiences " +
+                                    "across Europe. Last spring, the EBU and 14 of its Member broadcasters started to" +
+                                    " pilot a collaborative way of sharing digital news content amongst themselves."}
+                                    end={false}
+                                    left={true}
+                                />,
+                                <ProjectCard
+                                    imageSrc="/images/tool.webp"
+                                    title="Eurovox Project - Tool"
+                                    contents={"A user-facing tool for navigating, transcribing and translating multilingual " +
+                                    "content. With applications for both file-based (on-demand) and streaming use cases," +
+                                    " a one-time integration of the Tool provides access to a growing array of language tool " +
+                                    "vendors."}
+                                    end={false}
+                                    left={false}
+                                />,
+                                <ProjectCard
+                                    imageSrc="/images/EuroVOX.webp"
+                                    title="Eurovox Project - API"
+                                    contents={"Sharing trusted public service online news via public service media (PSM) platforms among EBU Members would create unique value for the Members and audiences across Europe. Last spring, the EBU and 14 of its Member broadcasters started to pilot a collaborative way of sharing digital news content amongst themselves."}
+                                    end={true}
+                                    left={true}
+                                />,
+                                <ProjectCard
+                                    imageSrc="/images/EuroVOX.webp"
+                                    title="Eurovox Project - API"
+                                    contents={"Sharing trusted public service online news via public service media (PSM) platforms among EBU Members would create unique value for the Members and audiences across Europe. Last spring, the EBU and 14 of its Member broadcasters started to pilot a collaborative way of sharing digital news content amongst themselves."}
+                                    end={true}
+                                    left={true}
+                                />
+                            ]}/>
+                    </Paper>
                 </Grid>
             </Grid>
         </>
