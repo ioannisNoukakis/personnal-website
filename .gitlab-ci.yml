@@ -57,4 +57,4 @@ frontend-build:
   script:
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} $CI_REGISTRY
     - docker build -t $CI_REGISTRY/root/personnal-website/frontend:latest .
-    - docker push $CI_REGISTRY/eurovox/root/personnal-website/frontend:latest
+    - docker push $CI_REGISTRY/root/personnal-website/frontend:latest
