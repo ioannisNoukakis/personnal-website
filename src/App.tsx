@@ -35,6 +35,9 @@ const useStyles = makeStyles({
             fontSize: "2rem",
         }
     },
+    SUPERCONTAINERGALAXY: {
+        maxWidth: "1000px"
+    },
     avatar: {
         [theme.breakpoints.down('md')]: {
             width: "100%"
@@ -127,50 +130,30 @@ export const App: React.FC = () => {
                         <ArrowDownwardIcon/>
                     </Button>
                 </Grid>
-                <Grid item ref={onOne}>
+                <Grid item ref={onOne} className={classes.SUPERCONTAINERGALAXY}>
                     <Paper className={classes.block1}>
                         <Grid container direction={wideScreen ? "row" : "column"} wrap="nowrap" spacing={1}>
                             <Grid item>
-                                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed
-                                    hendrerit justo.
-                                    In ac orci nisl. Nulla pulvinar, est in scelerisque condimentum, felis dolor
-                                    tincidunt
-                                    lacus, eu blandit purus mauris quis lorem. Morbi condimentum dictum leo, id dictum
-                                    ante
-                                    facilisis eu. Cras facilisis mauris mi, et varius mi tempor ut. Class aptent taciti
-                                    sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur
-                                    quam
-                                    nisi, viverra sit amet mauris sit amet, venenatis facilisis ante. Suspendisse ac
-                                    pretium
-                                    tellus. Nullam hendrerit scelerisque placerat. Maecenas quis venenatis metus. Cras
-                                    pretium diam et erat imperdiet lobortis. Vestibulum id orci risus. Nam eget placerat
-                                    purus. Curabitur vestibulum nibh et orci gravida, ornare ornare orci elementum.
-                                    Maecenas
-                                    suscipit libero et augue dignissim feugiat.
+                                <Typography>
+                                    I've always been drawn by technology, always will. So I like to design apps, systems
+                                    (distributed even!) and infrastructures!
                                 </Typography>
                                 <br/>
                                 <Typography>
-                                    Nunc at quam semper, tincidunt est quis, scelerisque sapien. Praesent et mi non orci
-                                    iaculis vehicula vitae sit amet ex. Nam imperdiet quis massa et dapibus. Aenean
-                                    elementum urna et convallis dictum. Etiam eu pulvinar mi, fermentum pharetra justo.
-                                    Maecenas facilisis aliquet nisl quis aliquam. Fusce congue feugiat nunc vel
-                                    pulvinar. In
-                                    aliquam suscipit velit, eget fermentum tellus rutrum eget. Aliquam vitae ipsum nisi.
+                                    I've started programming seven years ago, and throughout this journey, I discovered
+                                    more and more about it every day. To me, programming is more than a job or a hobby.
+                                    It's a philosophy: Technology must be assimilated, refined and transformed into
+                                    brutally efficient self-healing systems.
                                 </Typography>
                                 <br/>
                                 <Typography>
-                                    Vivamus sed tellus bibendum, ultrices dolor id, vehicula felis. Etiam mollis aliquam
-                                    lacus, ut euismod felis hendrerit quis. Nullam feugiat dapibus eros faucibus
-                                    finibus.
-                                    Praesent nec venenatis magna. Mauris nunc nulla, malesuada at vehicula nec, varius
-                                    ut
-                                    metus. Vestibulum mollis a dui mollis porttitor. Pellentesque elementum enim posuere
-                                    odio lacinia, sed maximus ipsum efficitur. Etiam feugiat elit sed nisi pellentesque
-                                    efficitur. Nunc lacinia elit facilisis dui posuere, quis porta nisl sagittis. Morbi
-                                    sit
-                                    amet nulla et nibh tempus tincidunt semper eget ante. Curabitur scelerisque urna
-                                    vitae
-                                    dapibus tempor. Proin mollis aliquet mi.
+                                    My primary language is TypeScript, and I'm comfortable in Java, Scala, and Python3.
+                                    I occasionally do some C++ in my lost hours.
+                                </Typography>
+                                <br/>
+                                <Typography>
+                                    Aside from the technical aspects, I love sailing, Dungeons and Dragons, and I love,
+                                    above all, the freedom of creativity.
                                 </Typography>
                             </Grid>
                             <Grid item>
@@ -179,7 +162,7 @@ export const App: React.FC = () => {
                         </Grid>
                     </Paper>
                 </Grid>
-                <Grid item>
+                <Grid item className={classes.SUPERCONTAINERGALAXY}>
                     <Paper className={classes.block2}>
                         <GridGroupByTwo
                             elements={[
