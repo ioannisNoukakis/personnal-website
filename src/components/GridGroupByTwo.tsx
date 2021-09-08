@@ -18,12 +18,12 @@ export const GridGroupByTwo: React.FC<Props> = ({elements}) => {
     }, [] as Array<Array<JSX.Element>>)
 
     return (
-        <Grid container>
+        <Grid container spacing={1}>
             {groupedElements.map((group) => {
                 const gridSize = Math.floor(12 / sizeofElems) as GridSize;
                 return (
                     <Grid item>
-                        <Grid container alignItems="stretch" justifyContent="center" wrap="nowrap" spacing={wideScreen ? 0 : 1}>
+                        <Grid container alignItems="stretch" justifyContent="center" wrap="nowrap" spacing={1}>
                             {group.map((element) => <Grid item xs={gridSize}>
                                 {element}
                             </Grid>)}

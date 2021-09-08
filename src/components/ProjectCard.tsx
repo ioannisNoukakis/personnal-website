@@ -1,12 +1,12 @@
 import React from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import {Card} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        borderTop: "solid 2px #eeeeee",
+        width: "100%",
         padding: theme.spacing(1),
         [theme.breakpoints.up('md')]: {
             height: 500,
@@ -21,23 +21,18 @@ interface Props {
     imageSrc: string;
     title: string;
     contents: string;
-    left: boolean;
-    end: boolean;
+    url: string;
 }
 
 export const ProjectCard: React.FC<Props> = ({
                                                  imageSrc,
                                                  title,
                                                  contents,
-                                                 left,
-                                                 end
+                                                 url,
                                              }) => {
     const classes = useStyles();
     return (
-        <div className={classes.root} style={{
-            borderBottom: end ? "solid 2px #eeeeee" : undefined,
-            borderRight: left ? "solid 2px #eeeeee" : undefined
-        }}>
+        <Card className={classes.root}>
             <CardMedia
                 className={classes.media}
                 image={imageSrc}
@@ -49,9 +44,9 @@ export const ProjectCard: React.FC<Props> = ({
             <Typography variant="body2" color="textSecondary" component="p">
                 {contents}
             </Typography>
-            <Button size="small" color="primary">
-                Learn More
-            </Button>
-        </div>
+            <a href={url} target="_blank" rel="noreferrer">
+                <Typography variant="button">Learn More</Typography>
+            </a>
+        </Card>
     );
 }
