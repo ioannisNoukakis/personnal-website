@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="Ioannis Noukakis personnal website"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
@@ -26,10 +26,26 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Ioannis Noukakis</title>
+    <meta property="og:title" content="Ioannis Noukakis personnal website" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="I'm a Full-Stack developper. My primary language is TypeScript, and I'm comfortable in Java, Scala, and Python3. I occasionally do some C++ in my lost hours." />
+    <meta property="og:url" content="https://noukakis.ch" />
+    <meta property="og:image" content="https://noukakis.ch/images/open-graph.png" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <!-- Google Analytics -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RMZYXH1J7V"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RMZYXH1J7V');
+    </script>
+    <!-- End Google Analytics -->
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
