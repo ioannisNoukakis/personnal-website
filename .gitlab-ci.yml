@@ -63,6 +63,7 @@ frontend-build:
 frontend-deploy:
   stage: frontend-deploy
   needs: [ frontend-build ]
+  environment: prod
   dependencies:
     - frontend-build
   image: alpine/k8s:1.21.2
