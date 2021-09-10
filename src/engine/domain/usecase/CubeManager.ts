@@ -34,21 +34,28 @@ export class CubeManager {
         // Spawn new cubes
         this._lastDelta += deltaMs;
         const howManyCycles = Math.floor(this._lastDelta / this._opts.intervalMS);
-        if (howManyCycles > 0 && this._cubes.length < this._opts.cubeNumberLimit) {
+        if (howManyCycles > 0) {
             this._lastDelta = 0;
-            for (let i = 0; i < howManyCycles; i++) {
-                for (let j = 0; j < this._opts.howManyPerBatch; j++) {
-                    const toAdd = this._opts.cubeFactory();
-                    toAdd.setPosition(this._opts.spawnPoint);
-                    toAdd.setDirection(this._opts.computeDirection(
-                        this._randomFn(this._opts.radiusMin, this._opts.radiusMax),
-                        this._opts.spawnPoint)
-                        .normalize()
-                    );
-                    toAdd.setSpeed(this._opts.speed);
-                    this._scene.add(toAdd);
-                    this._cubes.push(toAdd);
-                }
+            let howMany = this._opts.howManyPerBatch * howManyCycles;
+            if (this._opts.cubeNumberLimit < this._cubes.length + howMany) {
+                howMany = this._opts.cubeNumberLimit - this._cubes.length;
+            }
+            const cubesToAdd: HolyCube[] = [];
+            for (let i = 0; i < howMany; i++) {
+                const toAdd = this._opts.cubeFactory();
+                toAdd.setPosition(this._opts.spawnPoint);
+                toAdd.setDirection(this._opts.computeDirection(
+                    this._randomFn(this._opts.radiusMin, this._opts.radiusMax),
+                    this._opts.spawnPoint)
+                    .normalize()
+                );
+                toAdd.setSpeed(this._opts.speed);
+                cubesToAdd.push(toAdd);
+                this._cubes.push(toAdd);
+            }
+            // batch add is way more efficient.
+            if (cubesToAdd.length > 0) {
+                this._scene.add(cubesToAdd);
             }
         }
         // Update all cubes
@@ -66,6 +73,7 @@ export class CubeManager {
             }
             return true;
         });
+        // batch delete is way more efficient.
         if (toDelete.length > 0) {
             this._scene.remove(toDelete)
         }

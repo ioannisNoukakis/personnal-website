@@ -6,8 +6,8 @@ export class ThreeJSScene implements ScenePort {
     constructor(private _scene: Scene) {
     }
 
-    add(cube: HolyCube): void {
-        this._scene.add(cube.getObject3D())
+    add(cube: HolyCube[]): void {
+        this._scene.add(...cube.map(c => c.getObject3D()));
     }
 
     remove(cube: HolyCube[]): void {

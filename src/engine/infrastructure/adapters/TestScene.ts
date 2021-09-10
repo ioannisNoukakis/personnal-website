@@ -8,12 +8,12 @@ export class TestScene implements ScenePort {
         this._cubes = [];
     }
 
-    add(cube: HolyCube): void {
-        this._cubes.push(cube);
+    add(cube: HolyCube[]): void {
+        this._cubes = [...this._cubes, ...cube];
     }
 
     remove(cubes: HolyCube[]): void {
-        this._cubes = this._cubes.filter(c => cubes.includes(c));
+        this._cubes = this._cubes.filter(c => !cubes.includes(c));
     }
 
     getCubes() {

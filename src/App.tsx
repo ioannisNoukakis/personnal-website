@@ -139,16 +139,15 @@ export const App: React.FC = () => {
                         <Grid container direction={wideScreen ? "row" : "column"} wrap="nowrap" spacing={1}>
                             <Grid item>
                                 <Typography>
-                                    I've always been drawn by technology, always will. I like to design apps, systems
-                                    (distributed even!) and infrastructures!
+                                    I've always been drawn by technology, always will be. I like designing apps, systems
+                                    (even distributed ones!) and infrastructures.
                                 </Typography>
                                 <br/>
                                 <Typography>
-                                    I've started programming {moment("20130701", "YYYYMMDD").fromNow()}, and throughout
-                                    this journey, I discovered
-                                    more and more about it every day. To me, programming is more than a job or a hobby.
-                                    It's a philosophy: Technology must be assimilated, refined and transformed into
-                                    brutally efficient systems.
+                                    I've started programming {moment("20130701", "YYYYMMDD").fromNow()}, and
+                                    throughout this journey, I have discovered more and more about it every day. To me,
+                                    programming is more than a job or a hobby. It's a philosophy: Technology should be
+                                    assimilated, refined and transformed into efficient systems.
                                 </Typography>
                                 <br/>
                                 <Typography>
@@ -158,8 +157,7 @@ export const App: React.FC = () => {
                                 <br/>
                                 <Typography>
                                     Aside from the technical aspects, I love sailing, Dungeons and Dragons, heroic
-                                    fantasy and
-                                    video games among other things.
+                                    fantasy and video games among other things.
                                 </Typography>
                             </Grid>
                             <Grid item>

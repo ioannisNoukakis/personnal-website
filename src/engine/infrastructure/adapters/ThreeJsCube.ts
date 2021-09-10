@@ -34,7 +34,7 @@ export class ThreeJsCube implements HolyCube {
     }
 
     setDirection(direction: Vector3): void {
-        this._direction = direction;
+        this._direction = new Vector3(direction.x, direction.y, direction.z);
     }
 
     setPosition(pos: Vector3): void {

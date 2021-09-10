@@ -1,9 +1,8 @@
 import * as THREE from "three";
+import {Vector3} from "three";
 import {Lensflare, LensflareElement} from "three/examples/jsm/objects/Lensflare";
 import {ThreeJsCube} from "./infrastructure/adapters/ThreeJsCube";
 import {CubeManager} from "./domain/usecase/CubeManager";
-import {Vector3} from "three";
-import {TestCube} from "./infrastructure/adapters/TestCube";
 import {Point} from "./domain/usecase/utils";
 import {ThreeJSScene} from "./infrastructure/adapters/ThreeJSScene";
 import {JSRandom} from "./infrastructure/adapters/JSRandom";
@@ -22,7 +21,6 @@ export class ThreeDEngine {
 
     private _cubeManager: CubeManager;
 
-    private static readonly CAMERA_ROTATION_SPEED = 0.0002;
     private static readonly NORMAL_BRIGHTNESS = 1.5;
     private static readonly FAST_BRIGHTNESS = 2.5;
     private static readonly BRITHNESS_DELAY_MS = 100;
@@ -127,7 +125,6 @@ export class ThreeDEngine {
         requestAnimationFrame(() => this.animate());
         this._controls && this._controls.update();
         this._cubeManager.update(this._clock.getDelta() * 1000);
-        // this._camera.rotation.z += ThreeDEngine.CAMERA_ROTATION_SPEED % 360;
         this._renderer.render(this._scene, this._camera);
     }
 
