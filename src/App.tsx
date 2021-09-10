@@ -211,7 +211,7 @@ export const App: React.FC = () => {
                 <Grid item>
                     <Paper className={`${classes.block2} ${classes.end}`}>
                         <Grid container justifyContent="center">
-                            <Typography variant="h4"><a href="/public/cv-en.pdf" download>Download my CV</a></Typography>
+                            <Typography variant="h4"><a href="/cv-en.pdf" download>Download my CV</a></Typography>
                         </Grid>
                     </Paper>
                 </Grid>
